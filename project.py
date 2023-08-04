@@ -27,7 +27,11 @@ def after_request(response):
 @app.route("/")
 @login_required
 def index():
-    return render_template("index.html", )
+    cursor = get_cursor()
+    cursor.execute("SELECT username FROM users WHERE id = ?", (session["user_id"],))
+    rows = cursor.fetchall()
+    cursor.close()
+    return render_template("index.html", name = rows[0][0])
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
@@ -62,7 +66,7 @@ def register():
         cursor.connection.commit()
         
         # Query database for username
-        cursor.execute("SELECT * FROM users WHERE username = ?", request.form.get("username"))
+        cursor.execute("SELECT * FROM users WHERE username = ?", (request.form.get("username"),))
         rows = cursor.fetchall()
         
         # Remember which user has logged in
@@ -95,8 +99,9 @@ def login():
             return render_template("login.html", error_p=True)
 
         # Query database for username
-        cursor.execute("SELECT * FROM users WHERE username = ?", request.form.get("username"))
+        cursor.execute("SELECT * FROM users WHERE username = ?", (request.form.get("username"),))
         rows = cursor.fetchall()
+        cursor.close()
         
         # Ensure username exists and password is correct
         if len(rows) != 1:
@@ -106,6 +111,7 @@ def login():
 
         # Remember which user has logged in
         session["user_id"] = rows[0][0]
+        
 
         # Redirect user to home page
         return redirect("/")
@@ -113,7 +119,57 @@ def login():
     # User reached route via GET (as by clicking a link or via redirect)
     else:
         return render_template("login.html")
+
+@app.route("/profile", methods=["GET", "POST"])
+@login_required
+def profile():
+    if request.method == "POST":
+        cursor = get_cursor()
+        # Ensure password was submitted
+        if not request.form.get("newpassword"):
+            return render_template("profile.html", error_new = True)
+
+        cursor.execute("SELECT * FROM users WHERE id = ?", (session["user_id"],))
+        rows = cursor.fetchall()
+        
+        # Old password is not correct
+        if not check_password_hash(rows[0][-1], request.form.get("oldpassword")):
+            return render_template("profile.html", error_old = True)
+
+        if not request.form.get("newpassword") == request.form.get("confirmation"):
+            return render_template("profile.html", error_match = True)
+
+        cursor.execute("UPDATE users SET password = ?", (generate_password_hash(request.form.get("newpassword")),))
+        cursor.connection.commit()
+        cursor.close()
+        return render_template("profile.html", password_changed=True)
+    else:
+        return render_template("profile.html")
+   
+  
+@app.route("/products", methods=["GET", "POST"])
+@login_required
+def products():
+    if request.method == "POST":
+        ...
+    else:
+        return render_template("products.html")
+ 
+@app.route("/customers", methods=["GET", "POST"])
+@login_required
+def customers():
+    if request.method == "POST":
+        ...
+    else:
+        return render_template("customers.html")
     
+@app.route("/orders", methods=["GET", "POST"])
+@login_required
+def orders():
+    if request.method == "POST":
+        ...
+    else:
+        return render_template("orders.html")
     
 @app.route("/logout")
 def logout():

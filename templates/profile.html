@@ -13,15 +13,25 @@
 </header>
 <br />
 {% endif %}
-<form action="/passwordchange" method="post">
+<form action="/profile" method="post">
     <div class="mb-3">
         <input class="form-control mx-auto w-auto" id="oldpassword" name="oldpassword" placeholder="Old Password" type="password">
+        {% if error_old %}
+        <p class="red">[Password is incorrect]</p>
+        {% endif %}
     </div>
     <div class="mb-3">
         <input class="form-control mx-auto w-auto" id="newpassword" name="newpassword" placeholder="New Password" type="password">
+        {% if error_new %}
+        <p class="red">[Please provide new password]</p>
+        {% endif %}
     </div>
     <div class="mb-3">
         <input class="form-control mx-auto w-auto" id="confirmation" name="confirmation" placeholder="New Password (again)" type="password">
+        {% if error_match %}
+        <p class="red">[Passwords do not match]</p>
+        {% endif %}
+        
     </div>
     <button class="btn btn-primary" type="submit">Change Password</button>
 </form>

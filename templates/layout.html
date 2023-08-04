@@ -23,7 +23,7 @@
     <body>
 
         <nav class="bg-lighf border navbar navbar-expand-md navbar-light">
-            <div class="container-fluid">
+            <div class="container-fluid" id="content">
                 <a class="navbar-brand" href="/"><span class="blue">O</span><span class="red">S</span><span class="yellow">M</span><span class="green">S</span></a>
                 <button aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler" data-bs-target="#navbar" data-bs-toggle="collapse" type="button">
                     <span class="navbar-toggler-icon"></span>
@@ -31,7 +31,6 @@
                 <div class="collapse navbar-collapse" id="navbar">
                     {% if session["user_id"] %}
                         <ul class="navbar-nav me-auto mt-2">
-                            <li class="nav-item"><a class="nav-link" href="/menu">Menu</a></li>
                             <li class="nav-item"><a class="nav-link" href="/products">Products</a></li>
                             <li class="nav-item"><a class="nav-link" href="/customers">Customers</a></li>
                             <li class="nav-item"><a class="nav-link" href="/orders">Orders</a></li>

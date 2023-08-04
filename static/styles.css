@@ -26,3 +26,32 @@ p.red
 {
     color: red
 }
+
+p.greeting
+{
+    font-size: 60px;
+}
+
+body {
+    /* Set the minimum height of the content area to 100% of the viewport height */
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+#content {
+    /* Make the content area grow and take up all available space */
+    flex: 1;
+}
+
+footer {
+    /* Position the footer at the bottom of the viewport */
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: #f0f0f0;
+    padding: 10px;
+}
