@@ -5,4 +5,60 @@
 {% endblock %}
 
 {% block main %}
+<div>
+    {% if empty_list %}
+    <p class="header">Products table is currently empty. Add your products below.</p>
+    {% else %}
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th class="text-start">Product ID</th>
+                <th class="text-start">Name</th>
+                <th class="text-end">Quantity</th>
+                <th class="text-end">Price</th>
+                <th class="text-end">TOTAL</th>
+            </tr>
+        </thead>
+       <tbody>
+            {% for product in products %}
+                <tr>
+                    <td class="text-start">{{ product[0] }}</td>
+                    <td class="text-start">{{ product[2] }}</td>
+                    <td class="text-end">{{ product[3] }}</td>
+                    <td class="text-end">{{ product[4] }}</td>
+                    <td class="text-end">{{ product[3] * product[4] }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <td class="border-0 fw-bold text-end" colspan="4">TOTAL</td>
+                <td class="border-0 w-bold text-end">{{ total_price}}</td>
+            </tr>
+        </tfoot>
+    </table>
+    {% endif %}
+</div>
+<hr>
+<form action="/products" method="post">
+    <div class="mb-3">
+        <input class="form-control mx-auto w-auto" id="productname" name="productname" placeholder="Product name">
+        {% if name_empty %}
+        <p class="red">[Please provide product name]</p>
+        {% endif %}
+    </div>
+    <div class="mb-3">
+        <input class="form-control mx-auto w-auto" id="quantity" name="quantity" placeholder="Quantity">
+        {% if error_quantity %}
+        <p class="red">[Quantity should be a number]</p>
+        {% endif %}
+    </div>
+    <div class="mb-3">
+        <input class="form-control mx-auto w-auto" id="price" name="price" placeholder="Price (per 1 unit)">
+        {% if error_price %}
+        <p class="red">[Price should be a number]</p>
+        {% endif %}
+    </div>
+    <button class="btn btn-primary" type="submit">Add Product</button>
+</form>
 {% endblock %}

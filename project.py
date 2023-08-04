@@ -150,10 +150,38 @@ def profile():
 @app.route("/products", methods=["GET", "POST"])
 @login_required
 def products():
+    cursor = get_cursor()
     if request.method == "POST":
-        ...
+        name = request.form.get("productname")
+        if not name:
+            return render_template("products.html", name_empty = True)
+        try:
+            quantity = float(request.form.get("quantity"))
+        except ValueError:
+            return render_template("products.html", error_quantity = True)
+        try:
+            price = round(float(request.form.get("price")),2)
+        except ValueError:
+            return render_template("products.html", error_price = True)
+        cursor.execute("INSERT INTO products (user_id, name, quantity, price) VALUES (?, ?, ?, ?)", (session["user_id"], name, quantity, price))
+        cursor.connection.commit()
+        cursor.execute("SELECT * FROM products WHERE user_id = ?", (session["user_id"],))
+        products = cursor.fetchall()
+        total_price = 0
+        for product in products:
+            total_price += product[-1] * product[-2]
+        cursor.close()
+        return render_template("products.html", products=products, total_price=total_price)
     else:
-        return render_template("products.html")
+        cursor.execute("SELECT * FROM products WHERE user_id = ?", (session["user_id"],))
+        products = cursor.fetchall()
+        if len(products) == 0:
+            return render_template("products.html", empty_list = True)
+        total_price = 0
+        for product in products:
+            total_price += product[-1] * product[-2]
+        cursor.close()
+        return render_template("products.html", products=products, total_price=total_price)
  
 @app.route("/customers", methods=["GET", "POST"])
 @login_required

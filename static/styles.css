@@ -32,6 +32,11 @@ p.greeting
     font-size: 60px;
 }
 
+p.header
+{
+    font-size: 40px;
+}
+
 body {
     /* Set the minimum height of the content area to 100% of the viewport height */
     min-height: 100vh;
