@@ -1,8 +1,4 @@
-# OnlineStoreManagementSystem-WEB-
-
-Certainly, here's the README.md updated with the requirements from your `requirements.txt` file:
-
-# WebStoreManagementSystem
+# OnlineStoreManagementSystem (WEB)
 
 Web-based store management system that allows users to manage products, customers, and orders for an online store. The application provides functionalities for adding, viewing, updating, and deleting products, customers, and orders through a user-friendly web interface.
 
@@ -24,7 +20,7 @@ Web-based store management system that allows users to manage products, customer
 
 ## Description
 
-The WebStoreManagementSystem is a web application designed to simplify the management of an online store's products, customers, and orders. Built using Flask, HTML, and SQLite, this application offers an intuitive interface for store administrators to perform various tasks seamlessly.
+The OnlineStoreManagementSystem is a web application designed to simplify the management of an online store's products, customers, and orders. Built using Flask, HTML, and SQLite, this application offers an intuitive interface for store administrators to perform various tasks seamlessly.
 
 ## Features
 
@@ -49,8 +45,8 @@ The WebStoreManagementSystem is a web application designed to simplify the manag
 1. Clone the repository to your local machine:
 
    ```
-   git clone https://github.com/yourusername/WebStoreManagementSystem.git
-   cd WebStoreManagementSystem
+   git clone https://github.com/Trambl/OnlineStoreManagementSystem-WEB-.git
+   cd OnlineStoreManagementSystem-WEB-
    ```
 
 2. Install the required dependencies:
@@ -62,7 +58,7 @@ The WebStoreManagementSystem is a web application designed to simplify the manag
 3. Run the application:
 
    ```
-   python project.py
+   flask run
    ```
 
 ## Usage
