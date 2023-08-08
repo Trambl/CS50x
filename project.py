@@ -190,7 +190,7 @@ def products():
         cursor.connection.commit()
         cursor.execute("SELECT * FROM products WHERE user_id = ?", (session["user_id"],))
         products = cursor.fetchall()
-        
+        status = False
         total_price = 0
         for product in products:
             total_price += product[-1] * product[-2]
@@ -200,6 +200,16 @@ def products():
     else:
         cursor.close()
         return render_template("products.html", products=products, total_price=total_price, empty_list=status)
+
+@app.route("/delete_product", methods=["POST"])
+def delete_product():
+    product_id = request.form.get("product_id")
+    cursor = get_cursor()
+    cursor.execute("DELETE FROM products WHERE id = ?", (product_id,))
+    cursor.execute("DELETE FROM order_items WHERE product_id = ?", (product_id,))
+    cursor.connection.commit()
+    cursor.close()
+    return redirect("/products")
  
 @app.route("/customers", methods=["GET", "POST"])
 @login_required
@@ -231,6 +241,16 @@ def customers():
     else:
         cursor.close()
         return render_template("customers.html", customers=customers, empty_list = status)
+        
+@app.route("/delete_customer", methods=["POST"])
+def delete_customer():
+    customer_id = request.form.get("customer_id")
+    cursor = get_cursor()
+    cursor.execute("DELETE FROM customers WHERE id = ?", (customer_id,))
+    cursor.execute("DELETE FROM orders WHERE customer_id = ?", (customer_id,))
+    cursor.connection.commit()
+    cursor.close()
+    return redirect("/customers")
 
 @app.route("/orders", methods=["GET", "POST"])
 @login_required
@@ -291,6 +311,10 @@ def orders():
         order_id = cursor.lastrowid
         
         for p, q in zip(productids, quantity):
+            print(session["user_id"])
+            print(p)
+            print(q)
+            print(order_id)
             cursor.execute("INSERT INTO order_items (order_id, product_id, quantity) VALUES (?, ?, ?)", (order_id, p, q))
         
         cursor.connection.commit()
@@ -306,6 +330,7 @@ def orders():
                         JOIN customers ON orders.customer_id = customers.id
                         JOIN products ON order_items.product_id = products.id
                         WHERE orders.user_id = ?
+                        ORDER BY order_items.order_id
                         """, (session["user_id"],))
 
         orders = cursor.fetchall()
@@ -314,7 +339,17 @@ def orders():
     else:    
         cursor.close()
         return render_template("orders.html", orders=orders, empty_list=status)
-    
+
+@app.route("/delete_order", methods=["POST"])
+def delete_order():
+    order_id = request.form.get("order_id")
+    cursor = get_cursor()
+    cursor.execute("DELETE FROM order_items WHERE order_id = ?", (order_id,))
+    cursor.execute("DELETE FROM orders WHERE id = ?", (order_id,))
+    cursor.connection.commit()
+    cursor.close()
+    return redirect("/orders")
+
 @app.route("/logout")
 def logout():
     """Log user out"""

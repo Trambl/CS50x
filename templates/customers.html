@@ -38,6 +38,7 @@
                 <th class="text-start">Name</th>
                 <th class="text-end">Email</th>
                 <th class="text-end">Address</th>
+                <th class="text-end">Remove customer</th>
             </tr>
         </thead>
        <tbody>
@@ -47,6 +48,12 @@
                     <td class="text-start">{{ customer[2].title() }}</td>
                     <td class="text-end">{{ customer[3] }}</td>
                     <td class="text-end">{{ customer[4] }}</td>
+                    <td style="text-align: right; width: 1%;">
+                        <form action="/delete_customer" method="post">
+                            <input type="hidden" name="customer_id" value="{{ customer[0] }}">
+                            <button class="btn btn-primary" type="submit">Delete</button>
+                        </form>
+                    </td>
                 </tr>
             {% endfor %}
         </tbody>

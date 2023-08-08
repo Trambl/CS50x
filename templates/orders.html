@@ -55,7 +55,8 @@
                 <th class="text-start">Product ID</th>
                 <th class="text-start">Product name</th>
                 <th class="text-end">Quantity</th>
-                <th class="text-end">Price</th>
+                <th class="text-end">Total price</th>
+                <th class="text-end">Remove Order</th>
             </tr>
         </thead>
        <tbody>
@@ -68,6 +69,12 @@
                 <td class="text-start">{{ order[6].title() }}</td>
                 <td class="text-end">{{ order[3] | format_number}}</td>
                 <td class="text-end">{{ order[7] | format_number}}</td>
+                <td style="text-align: right; width: 1%;">
+                    <form action="/delete_order" method="post">
+                        <input type="hidden" name="order_id" value="{{ order[1] }}">
+                        <button class="btn btn-primary" type="submit">Delete</button>
+                    </form>
+                </td>
             </tr>
             {% endfor %}
         </tbody>
