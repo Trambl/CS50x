@@ -353,7 +353,14 @@ def delete_order():
 @app.route("/logout")
 def logout():
     """Log user out"""
-
+    cursor = get_cursor()
+    cursor.execute("DELETE FROM users WHERE id is NULL")
+    cursor.execute("DELETE FROM products WHERE id is NULL")
+    cursor.execute("DELETE FROM customers WHERE id is NULL")
+    cursor.execute("DELETE FROM orders WHERE id is NULL")
+    cursor.execute("DELETE FROM order_items WHERE id is NULL")
+    cursor.connection.commit()
+    
     # Forget any user_id
     session.clear()
 
