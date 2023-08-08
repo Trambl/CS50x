@@ -166,31 +166,38 @@ def products():
     total_price = 0
     if len(products) == 0:
         status = True
-
+    for product in products:
+            total_price += product[-1] * product[-2]
     if request.method == "POST":
         name = request.form.get("productname").lower().strip()
         if not name:
-            return render_template("products.html", name_empty = True, products=products, empty_list=status)
+            return render_template("products.html", name_empty=True, products=products, empty_list=status, total_price=total_price)
+        
         try:
-            quantity = float(request.form.get("quantity"))
+            quantity = int(request.form.get("quantity"))
         except ValueError:
-            return render_template("products.html", error_quantity = True, products=products, empty_list=status)
+            print("Error: Quantity is not a valid number")
+            return render_template("products.html", error_quantity=True, products=products, empty_list=status, total_price=total_price)
+        
         try:
-            price = round(float(request.form.get("price")),2)
+            price = round(float(request.form.get("price")), 2)
         except ValueError:
-            return render_template("products.html", error_price = True, products=products, empty_list=status)
-        cursor.execute("INSERT INTO products (user_id, name, quantity, price) VALUES (?, ?, ?, ?)", 
-                        (session["user_id"], name, quantity, price))
+            print("Error: Price is not a valid number")
+            return render_template("products.html", error_price=True, products=products, empty_list=status, total_price=total_price)
+        
+        cursor.execute("INSERT INTO products (user_id, name, quantity, price) VALUES (?, ?, ?, ?)",
+                    (session["user_id"], name, quantity, price))
         cursor.connection.commit()
         cursor.execute("SELECT * FROM products WHERE user_id = ?", (session["user_id"],))
         products = cursor.fetchall()
+        
+        total_price = 0
         for product in products:
             total_price += product[-1] * product[-2]
+        
         cursor.close()
         return render_template("products.html", products=products, total_price=total_price, empty_list=status)
     else:
-        for product in products:
-            total_price += product[-1] * product[-2]
         cursor.close()
         return render_template("products.html", products=products, total_price=total_price, empty_list=status)
  
@@ -250,34 +257,34 @@ def orders():
         try:
             customerid = int(request.form.get("customerid"))
         except ValueError:
-            return render_template("orders.html", customer_notnumber=True, empty_list=status)
+            return render_template("orders.html", customer_notnumber=True, empty_list=status, orders=orders)
         if not customerid:
-            return render_template("orders.html", customer_empty=True, empty_list=status)
+            return render_template("orders.html", customer_empty=True, empty_list=status, orders=orders,)
         cursor.execute("SELECT id FROM customers WHERE user_id = ?", (session["user_id"],))
         customers = cursor.fetchall()
         if (customerid,) not in customers:
-            return render_template("orders.html", customer_notfound=True, empty_list=status)
+            return render_template("orders.html", customer_notfound=True, empty_list=status, orders=orders)
         
         try:
             productids = [int(product.strip()) for product in request.form.get("productid").split(" ") if product.strip()]
         except ValueError:
-            return render_template("orders.html", product_notnumber=True, empty_list=status)
+            return render_template("orders.html", product_notnumber=True, empty_list=status, orders=orders,)
         if not productids:
-            return render_template("orders.html", product_empty=True, empty_list=status)
+            return render_template("orders.html", product_empty=True, empty_list=status, orders=orders,)
         cursor.execute("SELECT id FROM products WHERE user_id = ?", (session["user_id"],))
         products = cursor.fetchall()
         for productid in productids:
             if (productid,) not in products:
-                return render_template("orders.html", product_notfound=True, empty_list=status, id = productid)
+                return render_template("orders.html", product_notfound=True, empty_list=status, id = productid, orders=orders)
             
         try:
             quantity = [int(quantity.strip()) for quantity in request.form.get("quantity").split(" ") if quantity.strip()]
         except ValueError:
-            return render_template("orders.html", quantity_notnumber=True, empty_list=status)
+            return render_template("orders.html", quantity_notnumber=True, empty_list=status, orders=orders)
         if not quantity:
-            return render_template("orders.html", quantity_empty=True, empty_list=status)
+            return render_template("orders.html", quantity_empty=True, empty_list=status, orders=orders)
         if len(quantity) != len(productids):
-            return render_template("orders.html", quantity_products=True, empty_list=status)
+            return render_template("orders.html", quantity_products=True, empty_list=status, orders=orders)
         
         cursor.execute("INSERT INTO orders (user_id, customer_id) VALUES (?, ?)", (session["user_id"], customerid))
         
