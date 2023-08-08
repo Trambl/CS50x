@@ -13,3 +13,7 @@ def login_required(f):
             return redirect("/login")
         return f(*args, **kwargs)
     return decorated_function
+
+def format_number(value):
+    """Format value as number."""
+    return f"{value:,.2f}"

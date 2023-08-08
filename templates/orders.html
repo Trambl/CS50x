@@ -5,4 +5,73 @@
 {% endblock %}
 
 {% block main %}
+<div>
+    <form action="/orders" method="post">
+        <div class="mb-3">
+            <input class="form-control mx-auto w-auto" id="customerid" name="customerid" placeholder="Customer ID">
+            {% if customer_notnumber %}
+            <p class="red">[Customer id should be a number]</p>
+            {% elif customer_empty %}
+            <p class="red">[Please provide customer id]</p>
+            {% elif customer_notfound %}
+            <p class="red">[Customer with such id does not exist in the db for the current user]</p>
+            {% endif %}
+        </div>
+        <div class="mb-3">
+            <input class="form-control mx-auto w-auto" id="productid" name="productid" placeholder="Product ID">
+            {% if product_empty %}
+            <p class="red">[Please provide product id]</p>
+            {% elif product_notnumber %}
+            <p class="red">[Product id should be a number]</p>
+            {% elif product_notfound %}
+            <p class="red">[Product with id: {{ id }}, does not exist in the db for the current user]</p>
+            {% endif %}
+            <p>You can add multiple products by splitting them with a space (productid1 productid2)</p>
+        </div>
+        <div class="mb-3">
+            <input class="form-control mx-auto w-auto" id="quantity" name="quantity" placeholder="Quantity">
+            {% if quantity_empty %}
+            <p class="red">[Please provide quantity]</p>
+            {% elif quantity_notnumber %}
+            <p class="red">[Quantity should be a number]</p>
+            {% elif quantity_products %}
+            <p class="red">[Number of provided products should be equal to the number of quantities]</p>
+            {% endif %}
+            <p>Please specify quantity for every product (quantity1 quantity2)</p>
+        </div>
+        
+        <button class="btn btn-primary" type="submit">Add Order</button>
+    </form>
+    <hr>
+    {% if empty_list %}
+    <p class="header">Orders table is currently empty. Add orders above.</p>
+    {% else %}
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th class="text-start">Order ID</th>
+                <th class="text-start">Customer ID</th>
+                <th class="text-start">Customer name</th>
+                <th class="text-start">Product ID</th>
+                <th class="text-start">Product name</th>
+                <th class="text-end">Quantity</th>
+                <th class="text-end">Price</th>
+            </tr>
+        </thead>
+       <tbody>
+            {% for order in orders %}
+            <tr>
+                <td class="text-start">{{ order[1] }}</td>
+                <td class="text-start">{{ order[4] }}</td>
+                <td class="text-start">{{ order[5] }}</td>
+                <td class="text-start">{{ order[2] }}</td>
+                <td class="text-start">{{ order[6].title() }}</td>
+                <td class="text-end">{{ order[3] | format_number}}</td>
+                <td class="text-end">{{ order[7] | format_number}}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+</div>
 {% endblock %}

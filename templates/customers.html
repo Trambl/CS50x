@@ -5,4 +5,52 @@
 {% endblock %}
 
 {% block main %}
+<div>
+    <form action="/customers" method="post">
+        <div class="mb-3">
+            <input class="form-control mx-auto w-auto" id="customername" name="customername" placeholder="Customer name">
+            {% if name_empty %}
+            <p class="red">[Please provide customer name]</p>
+            {% endif %}
+        </div>
+        <div class="mb-3">
+            <input class="form-control mx-auto w-auto" id="email" name="email" placeholder="Email">
+            {% if error_email %}
+            <p class="red">[Please provide valid email address]</p>
+            {% endif %}
+        </div>
+        <div class="mb-3">
+            <input class="form-control mx-auto w-auto" id="address" name="address" placeholder="Address">
+            {% if error_address %}
+            <p class="red">[Please provide customer address]</p>
+            {% endif %}
+        </div>
+        <button class="btn btn-primary" type="submit">Add Customer</button>
+    </form>
+    <hr>
+    {% if empty_list %}
+    <p class="header">Customers table is currently empty. Add customers below.</p>
+    {% else %}
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th class="text-start">Customer ID</th>
+                <th class="text-start">Name</th>
+                <th class="text-end">Email</th>
+                <th class="text-end">Address</th>
+            </tr>
+        </thead>
+       <tbody>
+            {% for customer in customers %}
+                <tr>
+                    <td class="text-start">{{ customer[0] }}</td>
+                    <td class="text-start">{{ customer[2].title() }}</td>
+                    <td class="text-end">{{ customer[3] }}</td>
+                    <td class="text-end">{{ customer[4] }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+</div>
 {% endblock %}

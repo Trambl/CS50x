@@ -51,12 +51,10 @@ body {
     flex: 1;
 }
 
-footer {
-    /* Position the footer at the bottom of the viewport */
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
+.footer {
+    /* Add any necessary styles for your footer */
+    text-align: center;
     background-color: #f0f0f0;
     padding: 10px;
+    margin-top: auto;
 }
