@@ -89,7 +89,7 @@ The OnlineStoreManagementSystem is a web application designed to simplify the ma
 
 ## Demo
 
-You can find a live demo of the WebStoreManagementSystem [here](<URL HERE>).
+You can find a live demo of the WebStoreManagementSystem [here](https://youtu.be/tZJ7N5DGe2w).
 
 ## License
 
